@@ -9,8 +9,9 @@ export class AppController {
   constructor(private readonly messageService: MessageService) {}
 
   @Get()
-  rootRoute() {
-    return "app root";
+  async rootRoute() {
+    var messages: any[] = await this.messageService.getMessagesFromQueue(process.env.MESSAGE_QUEUE);
+    return messages.map(m => m.Body);
   }
 
   @Post()
