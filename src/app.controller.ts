@@ -11,7 +11,7 @@ export class AppController {
   @Get()
   async rootRoute() {
     var messages: any[] = await this.messageService.getMessagesFromQueue(process.env.MESSAGE_QUEUE);
-    return messages.map(m => m.Body);
+    return messages;
   }
 
   @Post()

@@ -44,6 +44,16 @@ export class MessageService {
 
         return this.sqsClient.receiveMessage(reqeuestOptions).promise()
                              .then(data => data.Messages || [])
-                             .catch(error => this.logger.log(error));
+                             .catch(error => this.logger.error(error));
+    }
+
+    public deleteMessageFromQueue(queueUrl: string, receiptHandle: string) {
+        var deleteParams = {
+            QueueUrl: queueUrl,
+            ReceiptHandle: receiptHandle
+        };
+
+        this.sqsClient.deleteMessage(deleteParams).promise()
+                      .catch(error => this.logger.error(error));
     }
 }
