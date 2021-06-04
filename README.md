@@ -8,11 +8,11 @@
 
 ## Running Locally
 
-* Launch SNS/SQS local containers: `docker compose up`
+* Launch SQS+SNS containers: `docker compose -f docker-sns-sqs-compose.yml up`
 * Run app: `nest start`
 
 ## Running all via Docker 
-* WIP
+* Run: `docker compose up --build`
 
 ## Testing:
 * SQS web dashboard: `http://localhost:9325/`

@@ -1,18 +1,33 @@
 version: "3.9"
 
 services:
-  sqs-mock:
-    image: roribio16/alpine-sqs:latest
-    container_name: sqs-mock
-    ports:
-      - "9324:9324"
-      - "9325:9325"
-  sns-mock:
-    image: s12v/sns
-    container_name: sns-mock
-    ports:
-      - "9911:9911"
-    volumes:
-      - ./sns-db.json:/etc/sns/db.json
-    depends_on:
-      - sqs-mock
+    sqs-mock:
+        image: roribio16/alpine-sqs:latest
+        container_name: sqs-mock
+        ports:
+            - "9324:9324"
+            - "9325:9325"
+    sns-mock:
+        image: s12v/sns
+        container_name: sns-mock
+        ports:
+            - "9911:9911"
+        volumes:
+            - ./sns-db.json:/etc/sns/db.json
+        depends_on:
+            - sqs-mock
+    messaging:
+        image: thoersch/nest-messaging
+        build:
+            dockerfile: Dockerfile
+            context: .
+        restart: on-failure
+        depends_on:
+            - sns-mock
+        ports:
+            - "3000:3000"
+        volumes:
+            - ~/.aws/:/root/.aws:ro
+        environment:
+            - MESSAGE_QUEUE=http://host.docker.internal:9324/queue/messages_queue
+            - AWS_ENDPOINT=http://host.docker.internal:9911
